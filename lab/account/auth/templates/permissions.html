@@ -1,0 +1,273 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block Page_title %} صلاحيات المستخدمين{% endblock %}
+{% load i18n %}
+{% block extra_head %}
+<link href="{% static 'css/lv.css' %}" rel="stylesheet">
+<script src="{% static 'js/jquery.js' %}"></script>
+<script src="{% static 'js/notify.min.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+
+
+              
+                    <header class="panel-heading">
+                  
+                    	 <ul class="breadcrumb">
+	<li>
+		<a href="/">الرئيسية</a>
+	</li>
+	<li>
+		<a href="{%url 'company' %}">الشركات</a>
+	</li>
+	<li>
+		<a href="{%url 'show_company' company.id %}">{{company.name}}</a>
+	</li>
+	
+	<li>
+		<a href="{{request.path}}">الصلاحيات</a>
+	</li>
+</ul>
+                    </header>
+                    <div class="panel-body">
+                    	{% if messages %}
+    {% for message in messages %}
+    <script>
+    $.notify("{{message}}",  {className: "{{message.tags}}", globalPosition: "top center"});
+    </script>
+    {% endfor %}
+{% endif %}
+                      <form class="form-horizontal bucket-form" method="post" >
+                      	{% csrf_token %}
+                      	
+
+                          <div class="form-group">
+                            <label class="col-sm-2 control-label col-lg-2" for="inputSuccess">تعديل الصلاحيات</label>
+                            <div class="col-lg-8">
+                                <label class="radio-inline">
+                                    <input type="radio" name="type" id="edit-category" value="category"> تعديل صلاحيات فئة وظيفية
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="type" id="edit-employee" value="employee"> تعديل صلاحيات موظف
+                                </label>
+								<span class=" LV_validation_message LV_invalid">{{ form.type.errors|striptags }}</span>
+
+                            </div>
+                          </div>
+                          <div class="form-group sal-opt" id="edit-employee-field">
+                            <label for="employeeID" class="col-sm-2 control-label">بيانات الموظف</label>
+                            <div class="col-sm-4">
+                               
+                          <select class="form-control" id="employeeID" name="employee" on>
+                                  <option value="">اختر اسم الموظف</option>
+                                   
+                                  {% for e in employees %}
+                                  <option value="{{e.id}}">{{e.name}}</option>
+                                 
+                              {%endfor %}
+                              </select>
+                                <span class=" LV_validation_message LV_invalid">{{ form.employee.errors|striptags }}</span>
+
+                            </div>
+                                   
+                                            <input type="checkbox" id="isadmin" name="isadmin" onchange="chkadmin(this);" >
+                                            <label>ادمن </label>
+                                        
+                          </div>
+                          <div class="form-group sal-opt" id="edit-category-field">
+                            <label for="employeeCat" class="col-sm-2 control-label">الفئة الوظيفية</label>
+                            <div class="col-lg-4">
+                              <select class="form-control" id="employeeCat" name="category">
+                                  <option value="">اختر الفئة الوظيفية</option>
+                                  {% for c in categories %}
+                                  <option value="{{c.id}}"> {{c.name}}</option>
+                                   
+                                   {%endfor %}
+                              </select>
+                            <span class=" LV_validation_message LV_invalid">{{ form.category.errors|striptags }}</span>
+
+                            </div>
+                          </div>
+                         <div id="updated_part">                       	
+                         
+                          <table class="table  table-hover general-table" id="sala7eyattable">
+                                <thead>
+                                <tr>
+                                    <th>اسم الصفحة</th>
+                                    <th>
+                                        <div class="checkbox ">
+                                            <input type="checkbox" id="titleCheck1" name="titleCheck1" >
+                                            <label>عرض</label>
+                                        </div>
+                                      
+                                    </th>
+                                    <th>
+                                        <div class="checkbox ">
+                                            <input type="checkbox" id="titleCheck2" name="titleCheck2" >
+                                            <label>تعديل</label>
+                                        </div>
+                                    </th>
+                                    <th>
+                                        <div class="checkbox ">
+                                            <input type="checkbox" id="titleCheck3" name="titleCheck3"  >
+                                            <label>إضافة</label>
+                                        </div>
+                                    </th>
+                                    <th>
+                                        <div class="checkbox ">
+                                            <input type="checkbox" id="titleCheck4" name="titleCheck4" >
+                                            <label>حذف</label>
+                                        </div>
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                	{% for p in permissions%}
+                                <tr>
+                                	
+                                    <td ><a href="#" >{{p.0}}</a></td>
+                                    <td class="view">
+                                        <div class="checkbox ">
+                                            <input type="checkbox" {% if p.1.0 == 'list_company' or p.1.0 == 'list_jobopening'%}disabled checked{%endif%} id="{{p.1.0}}" value="{{p.1.0}}" name="permissions">
+                                            <label for="viewCheck1" {% if p.1.0 == 'list_company' or p.1.0 == 'list_jobopening' %}style="text-decoration:line-through;"{%endif%}>عرض</label>
+                                        </div>
+                                    </td>
+                                    <td class="edit">
+                                        <div class="checkbox ">
+                                            <input type="checkbox" {% if p.1.2 == 'change_salary'%}disabled{%endif%} id="{{p.1.2}}" value="{{p.1.2}}" name="permissions">
+                                            <label for="editCheck1" {% if p.1.2 == 'change_salary'%} style="text-decoration:line-through;"{%endif%}>تعديل</label>
+                                        </div>
+                                    </td>
+                                    <td class="add">
+                                        <div class="checkbox ">
+                                            <input type="checkbox" {% if p.1.1 == 'add_salary'%}disabled {%elif p.1.1 == 'add_applicant' or p.1.1 == 'add_loanrequest' or p.1.1 == 'add_overtimerequest' or p.1.1 == 'add_vacationrequest' %}disabled checked {%endif%} id="{{p.1.1}}" value="{{p.1.1}}" name="permissions">
+                                            <label for="addCheck1" {% if p.1.1 == 'add_salary' or p.1.1 == 'add_applicant' or p.1.1 == 'add_loanrequest' or p.1.1 == 'add_overtimerequest' or p.1.1 == 'add_vacationrequest'%} style="text-decoration:line-through;"{%endif%}>إضافة</label>
+                                        </div>
+                                    </td>
+                                    <td class="del">
+                                        <div class="checkbox ">
+                                            <input type="checkbox"  {% if p.1.3 == 'delete_salary'%}disabled{%endif%} id="{{p.1.3}}" value="{{p.1.3}}" name="permissions">
+                                            <label for="delCheck1" {% if p.1.3 == 'delete_salary'%} style="text-decoration:line-through;"{%endif%} >حذف</label>
+                                        </div>
+                                    </td>
+                                </tr>
+                                 {% endfor %}
+                                </tbody>
+                            </table>
+</div>
+                            <div class="form-group">
+                                <div class="col-lg-6">
+                                    <button class="btn btn-primary" type="submit">حفظ</button>
+                                    <button class="btn btn-danger" type="reset">إلغاء</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+{% endblock %}
+{% block extra_footer %}
+<script type="text/javascript">
+
+	 $(document).ready(function() {
+	 	
+	 	// change cat
+	 	$("#employeeCat").change(function(){
+	 		$.ajax({
+	 			url : "/company/{{company.id}}/category/" + $(this).val()  + "/permissions",
+	 			method: "GET",
+	 			success:function(data){
+	 				var d = data.toString()
+	 				for (var p in d.split(',')){
+	 					$("#"+data[p]).prop('checked', true);
+	 				}
+	 				
+	 			}
+	 		});
+	 	});
+	 	
+	 	
+	 	$("#employeeID").change(function(){
+	 		$.ajax({
+	 			url : "/company/{{company.id}}/employee/" + $(this).val()  + "/permissions",
+	 			method: "GET",
+	 			success:function(data){
+	 				var d = data.toString()
+	 				for (var p in d.split(',')){
+	 					$("#"+data[p]).prop('checked', true);
+	 				}
+	 				
+	 			}
+	 		});
+	 	});
+	 	
+	 	function showEmployee(){
+	 		$(".sal-opt").fadeOut(regSpeed, 'easeOutCirc',  function(){
+	            $("#edit-employee-field").fadeIn(regSpeed2, 'easeInQuint');
+	            $('#choosen').val('0');
+        	});
+	 	}
+	 	
+	 	function showCategory(){
+	 		$(".sal-opt").fadeOut(regSpeed,'easeOutCirc', function(){
+            
+	            $("#edit-category-field").fadeIn(regSpeed2, 'easeInQuint');
+	            $('#choosen').val('1');
+        	});
+	 	}
+	 	
+	 	{% if form.employee.errors %}
+	 		showEmployee();
+	 	{% endif %}
+	 	
+	 	{% if form.category.errors %}
+	 		showCategory();
+	 	{% endif %}
+	 	
+	 	
+//=====================================================================
+$("#edit-employee-field").hide();
+$("#edit-category-field").hide();
+var regSpeed = 2;
+     var regSpeed2 = 200;
+     $("#edit-employee").click(function(){
+     	$(".checkbox").find('input').prop('checked', false);
+     	$("#employeeCat").val("");
+        showEmployee();
+    });
+    
+     $("#edit-category").click(function(){
+     	$(".checkbox").find('input').prop('checked', false);
+     	$("#employeeID").val("");
+        showCategory();
+        
+    });
+//==================================================================================================
+
+
+	$("#employeeCat").change(function(){
+	alert("سوف يتم كذلك تعديل كل الموظفين المنتمين لهذه الفئة الوظيفية");
+ 	$('#choosen').val('1');
+ 
+ 	 $("#titlep").text("تعديل صلاحيات الفئة الوظيفيه :"+ $('#employeeCat option:selected').text());
+ 	
+	    });    
+	    //=========================================================
+
+    });
+    	
+function  chkadmin (isadminchk) {
+  if(isadminchk.checked)
+  {
+  	if(confirm('هل تريد جعل هذا الموظف ادمن واعطائه كل الصلاحيات فى النظام ؟'))
+  	{
+  		$("#titleCheck1").click();
+  		$("#titleCheck2").click();
+  		$("#titleCheck3").click();
+  		$("#titleCheck4").click();
+  	}
+  }
+}    	
+    	  
+</script>
+{% endblock %}

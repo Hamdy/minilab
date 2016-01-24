@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+<!-- LOADING -->
+{% load url from future %}
+{% load i18n %}
+
+{% block body %}
+
+<form action="{{ app_path }}" method="post">
+{% csrf_token %}
+
+<label for="username">Username</label>
+<input type="text" name="username" id="id_username" />
+{{form.errors.username}}
+<br/>
+<label for="password">Password</label>
+<input type="password" name="password" id="id_password" />
+{{form.errors.password}}
+<br/>
+<input type="hidden" name="next" value="{{ next }}" />
+<input type="submit" class="grp-button" value="دخـــول" />
+
+</form>
+{% endblock %}

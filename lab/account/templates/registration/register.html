@@ -1,0 +1,19 @@
+<form method="post">
+	{% csrf_token %}
+<label for="username">Username</label>
+<input type="text" value="{{form.username.value|default_if_none:""}}" name="username"/>
+{{form.errors.username}}
+<br/>
+<label for="username">Email</label>
+<input type="email" value="{{form.email.value|default_if_none:""}}" name="email"/>
+{{form.errors.email}}
+<br/>
+<label for="password">Password</label>
+<input type="password" value="" name="password"/>
+{{form.errors.password}}
+<br/>
+<label for="password2">Repeat Password</label>
+<input type="password" value="" name="password2"/>
+{{form.errors.password2}}
+<input type="submit" value="Register">
+</form>

@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block js%}
+	<script>
+		$(document).ready(function(){
+			
+			$("#tests").addClass('selected');
+    		
+		});
+	</script>
+{% endblock %}
+
+{% block body %}
+
+<div class="panel" id="home">
+	<fieldset align="center">
+	<legend align="right">
+		<h1>
+			<a href="{% url 'add_test'%}"><img src="{% static 'images/add.png'%}" title="إضافة تحليل "></a>
+
+			  بــحث عن تحليل 
+			  
+		</h1>
+	</legend>
+	<form method="post" action="{% url 'list_tests'%}" align="right">
+		{% csrf_token %}
+		<input type="submit" value="بــحث">
+		<input name="param" type="text" />
+	</form>
+	</fieldset>
+	
+	<fieldset align="center">
+	<legend align="right">
+		<h1>
+			
+			التحاليل
+		</h1>
+		
+	 </legend>
+	<br/>
+	
+	{% if not tests %}
+		<div align="center">عفوا .... لا توجد نتائج</div>
+	{% else %}
+	<table border="1" align="center" width="500">
+		<tr>
+			<th>أخرى</th>
+		<th>سعر الإرسال إلى معامل أخرى</th>
+		<th>سعر الاستقبال من معامل أخرى</th>
+		<th>السعر</th>
+		<th>القيم</th>
+		<th>المجموعة</th>
+		<th>اسم التحليل</th><br />
+		<th>الرقم التعريفى</th>
+		
+		</tr>
+		{% for record in tests %}
+		<tr>
+			<td>
+				<a href="{% url 'delete_test' record.id %}" > 
+				<img src="{% static 'images/delete.png' %}" title="حذف التحليل" />
+				</a>
+				
+			</td>
+			<td>
+				<ul>
+			{% for price in record.sending_prices.all %}
+			<li>{{price}} جنيه</li>
+			{% endfor %}
+			</ul>
+			</td>
+			
+			<td> 
+				{{record.receiving_price}}   
+				جنيه 
+				</td>
+			<td>  {{record.price}} جنيه</td>
+			<td>
+				<ul>
+			{% for range in record.ranges.all %}
+			<li>{{range}} {{record.unit}}</li>
+			{% endfor %}
+			</ul>
+			</td>
+			<td><a href="{% url 'list_tests' param=record.group.name %}">{{record.group.name}}</a></td>
+			<td><a href="{% url 'edit_test' id=record.id %}">{{record.name}}</a></td>
+			<td><a href="{% url 'edit_test' id=record.id %}">{{record.id}}</a></td>
+		</tr>
+			{% endfor %}
+	</table>
+{%endif%}
+</fieldset>				
+
+</div>
+{% endblock %}

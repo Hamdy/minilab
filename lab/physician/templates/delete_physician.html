@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block js%}
+<script>
+	$(document).ready(function() {
+
+		$("#physician").addClass('selected');
+
+	}); 
+</script>
+{% endblock %}
+
+{% block body %}
+
+<div class="panel" id="home">
+	<fieldset align="center">
+		<legend align="right">
+			<h1> تأكيد حذف طبيب </h1>
+
+		</legend>
+		<br/>
+		<table border="0" align="center" width="500">
+
+			<tr>
+
+				<td> اسم الطبيب :   {{physician.name}} </td>
+			</tr>
+
+			<tr>
+				<td> العنوان :   {{physician.address}} </td>
+			</tr>
+
+			<tr>
+				<td> التليفون :   {{physician.telephone}} </td>
+			</tr>
+
+			<td> الهاتف المحمول :   {{physician.cell}} </td>
+			<tr>
+				<td>{% if physician.is_vip %}
+				<input type="checkbox" disabled="disabled">
+				{% else %}
+				<input type="checkbox" checked="checked" disabled="disabled">
+				{% endif %}
+				: تم التعاقد معه </td>
+			</tr>
+
+			<tr>
+				<td>
+				<form action="{% url 'confirm_delete_physician' physician.id %}" method="post">
+					 {% csrf_token %}
+					<input  type="submit" value="تأكيد الحــــــــذف"/>
+
+				</form></td>
+			</tr>
+		</table>
+
+	</fieldset>
+
+</div>
+{% endblock %}

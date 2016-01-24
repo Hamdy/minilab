@@ -1,0 +1,187 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="description" content="">
+		<meta name="author" content="ThemeBucket">
+		<link rel="shortcut icon" href="{% static 'images/favicon.png' %}">
+
+		<title>تسجيل الدخول</title>
+
+		<!--Core CSS -->
+		<link href="{% static 'bs3/css/bootstrap.css' %}" rel="stylesheet">
+		<!-- Bootstrap RTL Theme -->
+		<link rel="stylesheet" href="{% static 'bs3/css/bootstrap-rtl.css' %}">
+		<link href="{% static 'css/bootstrap-reset.css' %}" rel="stylesheet">
+		<link href="{% static 'font-awesome/css/font-awesome.css' %}" rel="stylesheet" />
+
+		<!-- Custom styles for this template -->
+		<link href="{% static 'css/style.css' %}" rel="stylesheet">
+		<link href="{% static 'css/style-responsive.css' %}" rel="stylesheet" />
+	</head>
+
+	<body class="login-body" id="vv">
+
+		<div class="container">
+
+			<form class="form-signin"  id="loginform"  method="post">
+				{% csrf_token %}
+				<h2 class="form-signin-heading">تسجيل الدخول</h2>
+				<div class="login-wrap">
+					<div class="user-login-info">
+						<input type="text" class="form-control" placeholder="اسم المستخدم" name="username" autofocus id="username">
+						<input type="password" class="form-control" placeholder="كلمة المرور" name="password" id="password">
+						<input type="hidden" value="{{ request.GET.next }}" name="next" />
+					</div>
+					<label class="checkbox">
+						<input type="checkbox" name='remember_me' id='remember_me' value="remember-me">
+						تذكرني <span class="pull-left"> <a data-toggle="modal" href="#myModal"> نسيت كلمة المرور؟ </a> </span> </label>
+						<div style="color:green;" id="reset-password-success"></div>
+					<button id="submit-login" class="btn btn-lg btn-login btn-block" type="submit">
+						تسجيل الدخول
+					</button>
+
+				</div>
+			</form>
+			<!-- Modal -->
+			<div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="myModal" class="modal fade">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+								&times;
+							</button>
+							<h4 class="modal-title">نسيت كلمة المرور؟ </h4>
+							
+						</div>
+						<div class="modal-body">
+							<p>
+								ادخل عنوان بريدك الالكتروني لاسترجاع كلمة المرور.
+							</p>
+							<input type="text" name="email" id="email" placeholder="البريد الالكتروني" autocomplete="off" class="form-control placeholder-no-fix">
+
+						</div>
+						<div class="modal-footer">
+							<div id="loading">
+							  <p><img src="{% static 'images/ajax-loader.gif' %}" /> انتظر قليلا</p>
+							</div>
+							<button id="dismiss" data-dismiss="modal" class="btn btn-default" type="button">
+								إلغاء
+							</button>
+							<button id="submit-reset-password" class="btn btn-success" type="button">
+								إرسال
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- modal -->
+
+		</div>
+
+		<!-- Placed js at the end of the document so the pages load faster -->
+
+		<!--Core js-->
+		<script src="{% static 'js/jquery.js' %}"></script>
+		<script src="{% static 'js/jquery.cookie.js' %}"></script>
+		<script src="{% static 'bs3/js/bootstrap.min.js' %}"></script>
+		<script src="{% static 'js/lv.js' %}"></script>
+		<link href="{% static 'css/lv.css' %}" rel="stylesheet">
+	</body>
+	<footer>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				var csrftoken = $.cookie('csrftoken');
+				function csrfSafeMethod(method) {
+			    // these HTTP methods do not require CSRF protection
+			    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+			}
+				$.ajaxSetup({
+			    	beforeSend: function(xhr, settings) {
+			        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+			            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+			        }
+			    	}
+				});
+			});
+		</script>
+		<script type="text/javascript">
+ 			$('#loading').hide();
+			var username = new LiveValidation('username');
+			var password = new LiveValidation('password');
+			var email = new LiveValidation('email');
+			
+			// reset email field on dimiss
+			$("#dismiss").click(function(){
+				$("#email").val('');
+			});
+			
+			$("#submit-login").click(function(){
+				password.destroy();
+				
+				username.add(Validate.Presence, {
+					failureMessage : "من فضلك ادخل اسم المستخدم",
+					onlyOnSubmit : true
+				});
+				
+				password.add(Validate.Presence, {
+					failureMessage : "من فضلك ادخل كلمة السر",
+					onlyOnSubmit : true
+				});
+				
+				
+				username.validate();
+				password.validate();
+				if (username.validate() && password.validate()) {
+					$('#loginform').submit();
+				}
+			});
+			
+			$("#submit-reset-password").click(function(){
+				
+				email.destroy();
+				
+				email.add(Validate.Presence, {
+					failureMessage : "من فضلك ادخل البريد الالكتروني",
+					onlyOnSubmit : true
+				});
+				
+				email.add(Validate.Email, {
+					failureMessage : "بريد إلكترونى خاطىء",
+					onlyOnSubmit : true
+				});
+				
+				if(email.validate()){
+			    	$('#loading').show();
+			 
+					$.ajax({
+						method : "post",
+						url : "{% url 'auth_password_reset' %}",
+						data: {email:$("#email").val()},
+						success:function(){
+							$("#reset-password-success").text("تم إرسال بريد إليكترونى بالتعليمات اللازمة لتغيير كلمة المرور");
+							$("#dismiss").click();
+						},
+						failure:function(){}
+					});
+				}
+				
+			});
+			
+			{% if form.errors %}
+				password.add(Validate.Presence, {
+						failureMessage : "اسم المستخدم أو كلمة المرور خطأ",
+						onlyOnSubmit : true
+				});
+				
+				password.validate();	
+							
+			{% endif %}
+
+		</script>
+	</footer>
+</html>

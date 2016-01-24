@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block js%}
+<script>
+	$(document).ready(function() {
+
+		$("#analysis").addClass('selected');
+
+	}); 
+</script>
+{% endblock %}
+
+{% block body %}
+
+<div class="panel" id="home">
+	<fieldset align="center">
+		<legend align="right">
+			<h1> تأكيد حذف فحص </h1>
+
+		</legend>
+		<br/>
+		<table border="0" align="center" width="500">
+
+			<tr>
+				<td>{{analysis.patient.name}} </td>
+				<td> اسم المريض</td>
+			</tr>
+			
+			<tr>
+				<td>{{analysis.date_created}} </td>
+				<td> التاريخ</td>
+			</tr>
+
+
+			<tr>
+				{% for test in analysis.tests.all %}
+				<td>{{test.name}} </td>
+				{% endfor %}
+				<td> التحاليل</td>
+			</tr>
+
+
+			
+					<tr>
+						<td>
+						<form action="{% url 'confirm_delete_analysis' analysis.id %}" method="post">
+							{% csrf_token %}
+							<input  type="submit" value="تأكيد الحــــــــذف"/>
+
+						</form></td>
+					</tr>
+				</table>
+
+			</fieldset>
+
+</div>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block js%}
+<script>
+	$(document).ready(function() {
+
+		$("#tests").addClass('selected');
+
+	}); 
+</script>
+{% endblock %}
+
+{% block body %}
+
+<div class="panel" id="home">
+	<fieldset align="center">
+		<legend align="right">
+			<h1> تأكيد حذف تحليل </h1>
+		</legend>
+		<br/>
+		<table border="0" align="center" width="500">
+
+			<tr>
+				<td>{{test.name}} </td>
+				<td> اسم التحليل</td>
+			</tr>
+
+			
+					<tr>
+						<td>
+						<form action="{% url 'confirm_delete_test' test.id %}" method="post">
+							{% csrf_token %}
+							<input  type="submit" value="تأكيد الحــــــــذف"/>
+
+						</form></td>
+					</tr>
+				</table>
+
+			</fieldset>
+
+</div>
+{% endblock %}

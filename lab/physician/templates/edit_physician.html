@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block js%}
+	<script>
+		$(document).ready(function(){
+			
+			$("#physician").addClass('selected');
+    		
+		});
+	</script>
+{% endblock %}
+
+{% block body %}
+<div class="panel" id="home">
+<fieldset align="center">
+<legend align="right"> <h1>تعديل بيانات طبيب</h1></legend>
+<form method="post">
+	{% csrf_token %}
+	<table align="right">
+		<tr>
+			
+			<td align="left">{{form.name}}</td>
+			<td align="right"><label for="id_name">:الإسم</label></td>
+		</tr>
+		<tr><td align="left" style="color:red;">{{form.name.errors}} </td></tr>
+		<tr>
+			<td align="left">{{form.address}}</td>
+			<td align="right"> <label for="id_address">:العنوان</label></td>
+			{{form.address.errors}}
+			
+			
+	
+		</tr>
+	
+	<tr>
+		<td align="left">	{{form.telephone}}</td>
+			<td align="right"> <label for="id_telephone">:رقم التليفون</label></td>
+		{{form.telephone.errors}}
+		
+	</tr>
+	
+	<tr>
+	
+			<td align="left">	{{form.cell}}</td>
+			<td align="right"> <label for="id_cell">:الهاتف المحمول</label></td>
+			
+			{{form.cell.errors}}
+	
+	
+	</tr>
+	
+	<tr>
+		<td align="left">	{{form.is_vip}}</td>
+			<td align="right"> <label for="id_is_vip">:متعاقد معه</label></td>
+
+	{{form.is_vip.errors}}
+	
+	
+	</tr>
+	
+	<tr>
+		<td align="right">
+		<input type="submit" value="تعديل">
+		</td> 
+	</tr>
+	</table>
+</form>
+</fieldset>
+</div>
+{% endblock %}

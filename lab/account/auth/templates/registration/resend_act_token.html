@@ -1,0 +1,6 @@
+<form action="{% url 'resend_activation'%}" method='post'>
+	{% csrf_token %}
+	<input type="email" name="email">
+	<div class="errors">{{form.errors.email}}</div>
+	<input type="submit">
+</form>

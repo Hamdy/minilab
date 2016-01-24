@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block js%}
+	<script>
+		$(document).ready(function(){
+			
+			$("#main").addClass('selected');
+    		
+		});
+	</script>
+{% endblock %}
+{% block body %}
+
+<div class="panel" id="home">
+								
+						
+<fieldset>
+	<legend align="right"><center><h1>تسجيل الحضور والانصراف</h1></center></legend>
+{% if not attended%}
+<form action = "{% url 'attend' %}" method="POST" style="position:relative; float:right">
+	{% csrf_token %} 
+	<input type="submit" style="background:url(/static/images/attendance.png); width:128px; height:160px; border: 0; display: block; background-repeat:no-repeat;font-size:20px" value="حضــــور" />
+
+</form>
+{% endif %}
+
+{% if not departed %}
+<form action = "{% url 'depart' %}" method="POST" style="position:relative; float:left">
+	{% csrf_token %} 
+	<input type="submit" style="background:url(/static/images/departure.png); width:128px; height:200px; border: 0; display: block; background-repeat:no-repeat;font-size:20px" value="انصـــراف" />
+</form>
+{% endif %}
+{% if attended and departed %}
+<div align="center"> تم تسجيل الحضور والانصراف اليومى</div>
+{% endif %}
+</fieldset>
+<br/>
+<fieldset align="center">
+	<legend align="right"><h1>جدول الحضور والانصراف الشهرى</h1> </legend>
+	<br/>
+	<table border="1" align="center" width="500">
+		<tr>
+		<th>الانصراف</th>
+		<th>الحضور</th>
+		</tr>
+		<tr>
+			{% for record in records %}
+			
+			<td>
+				{% if record.departure %}
+				{{record.departure}}
+				{% endif %}
+				</td>
+			<td>{{record.attendance}}</td>
+		</tr>
+			{% endfor %}
+	</table>
+
+</fieldset>
+</div>
+{% endblock %}

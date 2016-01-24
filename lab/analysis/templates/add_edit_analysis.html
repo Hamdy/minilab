@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block js%}
+<script src="{% static 'js/jquery.multi-select.js' %}"></script>
+<script src="{% static 'js/quicksearch.js'%}"></script>
+<script>
+	$(document).ready(function(){
+		$("#submit").click(function(){
+			var test_lab = {};
+			var tests = '';
+			var labs = '';
+			$('input:checked').each(function(){
+				labs += $(this).parent().find('select').val();
+				labs += ',';
+				tests += $(this).val();
+				tests += ',';
+			});
+			
+			$("#id_tests").val(tests);
+			$("#id_labs").val(labs);
+			$("#form").submit();
+		});
+	});
+	
+		
+	
+</script>
+{% endblock %}
+
+{% block css %}
+<link href="{% static 'css/multi-select.css' %}" rel="stylesheet" type="text/css" />
+
+{% endblock %}
+{% block body %}
+<div class="panel" id="home">
+	<fieldset align="center">
+		<legend align="right">
+			<h1>إضافة فحص</h1>
+		</legend>
+		<form method="post" id="form">
+			{% csrf_token %}
+			<table align="right">
+				{{form.errors}}
+				<tr>
+					<td align="right">{{patient_name}}</td>
+					<td align="right"><label for="id_name">:اسم المريض</label></td>
+				</tr>
+				<tr id=>
+					<td align="right">{{form.physician}}</td>
+					<td align="right"><label>:اسم الطبيب</label></td>
+				</tr>
+				
+				<tr>
+					<td align="right">{{form.fast_hours_count}}</td>
+					<td align="right"><label for="id_name">:عدد ساعات الصيام</label></td>
+				</tr>
+				<tr>
+					<td align="right">{{form.x_ray_dye}}</td>
+					<td align="right"><label for="id_name">:أشعة بالصبغة</label></td>
+				</tr>
+				
+				<tr>
+						{{form.tests}}
+						{{form.labs}}
+				</tr>
+			</table>
+		</form>
+	</fieldset>
+	
+	<fieldset>
+		<legend>
+			التحاليل
+		</legend>
+		
+		<button id="submit">ADD</button>
+		{% for test in tests %}
+		<div class="test">
+			<input type="checkbox" value="{{test.id}}" class="test-checkbox">{{test.name}} 
+			
+			<select class="labs">
+				<option value="0">------</option>
+				{% for lab in labs %}
+				<option value="{{lab.id}}">{{lab.name}}</option>
+				{% endfor %}
+			</select>
+			محول من :
+			<br/>
+		</div>
+		{% endfor %}
+	</fieldset>
+</div>
+{% endblock %}

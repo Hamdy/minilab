@@ -1,0 +1,5 @@
+REG_SUCCESSFUL = 'reg_successful'
+REG_SUCCESSFUL_MESSAGE= 'Registration Successful, please activate your account then <a href="/login">login</a>'
+ACT_TOKEN_EXPIRED = 'Activation Token Expired'
+ACT_SUCCESSFUL = 'Activation Successful'
+ACT_TOKEN_RESENT = 'Activation Token is resent to your Email address'

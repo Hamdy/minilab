@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+
+{% block body %}
+
+	<div class="panel" id="home">
+	<fieldset align="center">
+	<legend align="right">
+		<h1>
+			  بــحث عن فحص باستخدام اسم المريض 
+			  
+		</h1>
+	</legend>
+	<form method="post" action="{% url 'list_analysis'%}" align="right">
+		{% csrf_token %}
+		<input type="submit" value="بــحث">
+		<input name="patient_name" type="text" />
+	</form>
+	</fieldset>
+	
+	<fieldset align="center">
+	<legend align="right">
+		<h1>
+			
+			الفحوصات 
+		</h1>
+		
+	 </legend>
+	<br/>
+	
+	{% if not analysis %}
+		<div align="center">عفوا .... لا توجد نتائج</div>
+	{% else %}
+	<table border="1" align="center" width="500">
+		<tr>
+			<th>أخرى</th>
+		<th>تم تسليمه</th>
+		<th>اسم المريض</th><br />
+		<th>الرقم التعريفى</th>
+		
+		</tr>
+		{% for record in analysis %}
+		<tr>
+			<td>
+				<a href="{% url 'delete_analysis' record.id %}" > 
+				<img src="{% static 'images/delete.png' %}" title="حذف الفحص" />
+				</a>
+				
+				<a href="{% url 'edit_analysis' record.id %}" > 
+				<img src="{% static 'images/edit.png' %}" title="تعديل">
+				</a>
+				
+				
+			</td>
+			
+			<td>
+				{% if record.delivered %}
+					<input type="checkbox" disabled checked >
+				{% else %}
+				<input type="checkbox" disabled>
+				{%endif%}
+				</td>
+
+			<td><a href="{% url 'edit_analysis' id=record.id %}">{{record.patient.name}}</a></td>
+			<td><a href="{% url 'edit_analysis' id=record.id %}">{{record.id}}</a></td>
+		</tr>
+			{% endfor %}
+	</table>
+{%endif%}
+</fieldset>				
+
+</div>
+{% endblock %}
+

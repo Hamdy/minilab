@@ -1,0 +1,83 @@
+{% extends 'base.html'%}
+{% block body %}
+
+<div class="panel" id="home">
+
+	<fieldset align="center">
+		<legend align="right">
+			<h1> عرض التحاليل  </h1>
+		</legend>
+		<form method="post" id="form">
+			{% csrf_token %}
+			<table align="right">
+				{{form.errors}}
+				<tr>
+					<td align="left">{{form.type}}</td>
+					<td align="right"><label for="id_name">:اختر المدة الزمنية</label></td>
+
+				</tr>
+				
+				<tr>
+					<br/>
+					<td align="right">
+					<input type="submit" id="submit" value="عرض التحاليل">
+					</td>
+				</tr>
+				
+			</table>
+		</form>
+	</fieldset>
+	
+	<fieldset align="center">
+		<legend align="right">
+			<h1>  التحاليل</h1>
+			{%if analysises %}
+			<input type="checkbox" id="select-all"> اختر الكل
+			{% endif %}
+		</legend>
+		<form method="post" id="form" action="{% url 'send_analysis' %}">
+			{% csrf_token %}
+			{%if analysises %}
+			<select name="lab">
+				{% for lab in labs %}
+					<option value="{{lab.id}}">{{lab.name}}</option>
+				{% endfor %}
+			</select>
+			<input type="submit" value="نقل">
+			{% endif %}
+		<table align="right">
+			{% for analysis in analysises %}
+			<fieldset align="right">
+				<legend align="right">
+					{{analysis.patient.name}}  : المريض
+				</legend>
+				
+				{% for test_info in analysis.tests.all	 %}
+							{% if not test_info.is_to_lab %}
+							<input class="tests" type="checkbox" name="tests" value="{{test_info.id}}" selected>{{test_info.test.name}}
+							{% endif %}
+						{% endfor %}
+			</fieldset>
+				
+				{% endfor %}
+				
+			</table>
+		</form>
+	</fieldset>
+</div>
+
+{% endblock %}
+
+{% block js%}
+<script>
+	$(document).ready(function(){
+		$("#select-all").click(function(){
+		if($(this).attr('checked'))
+			$(".tests").attr('checked', true);
+		else
+			$(".tests").attr('checked', false);
+	});
+	});
+	
+	</script>
+{% endblock %}

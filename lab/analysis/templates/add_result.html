@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+
+{% block body %}
+<div class="panel" id="home">
+	<fieldset align="center">
+		<legend align="right">
+			<h1>إضافة نتيجة</h1>
+		</legend>
+		<form method="post" id="form">
+			{% csrf_token %}
+			<table align="right">
+				{% for field, error in errors.items %}
+					<li>
+						{{field}} : {{error}}
+					</li>
+				{% endfor%}
+				<tr>
+					<td align="right">{{patient.name}}</td>
+					<td align="right"><label for="id_name">:اسم المريض</label></td>
+				</tr>
+				
+				{% for test in tests%}
+				<tr>
+				<td><input name="{{test.name}}" value="{{test.value}}"></td>
+				<td align="right"><label for="id_name">{{test.name}}</label></td>
+				</tr>
+				{% endfor %}
+				
+				<tr>
+					<br/>
+					<td align="right">
+					<input type="submit" id="submit" value="إضافة">
+					</td>
+				</tr>
+			</table>
+		</form>
+	</fieldset>
+</div>
+{% endblock %}

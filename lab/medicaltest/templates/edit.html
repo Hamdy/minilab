@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block js%}
+	<script>
+		$(document).ready(function(){
+			
+			$("#test").addClass('selected');
+    		
+		});
+	</script>
+{% endblock %}
+
+{% block body %}
+<div class="panel" id="home">
+<fieldset align="center">
+<legend align="right"> <h1>تعديل بيانات تحليل</h1></legend>
+<form method="post">
+	{% csrf_token %}
+	<table align="right">
+		<tr>
+			
+			<td align="left">{{form.name}}</td>
+			<td align="right"><label for="id_name">:الإسم</label></td>
+		</tr>
+		<tr><td align="left" style="color:red;">{{form.name.errors}} </td></tr>
+		<tr>
+			<td align="left">{{form.group}}</td>
+			<td align="right"> <label for="id_address">:المجموعة</label></td>
+			{{form.group.errors}}
+			
+			
+	
+		</tr>
+	
+	<tr>
+		<td align="left">	{{form.ranges}}</td>
+			<td align="right"> <label for="id_telephone">:القيم</label></td>
+		{{form.ranges.errors}}
+		
+	</tr>
+	
+	<tr>
+	
+			<td align="left">	{{form.price}}</td>
+			<td align="right"> <label for="id_cell">:السعر</label></td>
+			
+			{{form.price.errors}}
+	
+	
+	</tr>
+	
+	<tr>
+		<td align="left">	{{form.receiving_price}}</td>
+			<td align="right"> <label for="id_is_vip">:سعر الاستقبال من معمل أخر</label></td>
+
+	{{form.receiving_price.errors}}
+	
+	
+	</tr>
+	
+	<tr>
+		<td align="left">	{{form.sending_prices}}</td>
+			<td align="right"> <label for="id_is_vip">:سعر الإرسال إلى معمل أخر</label></td>
+
+	{{form.sending_prices.errors}}
+	
+	
+	</tr>
+	
+	<tr>
+		<td align="right">
+		<input type="submit" value="تعديل">
+		</td> 
+	</tr>
+	</table>
+</form>
+</fieldset>
+</div>
+{% endblock %}

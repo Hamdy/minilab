@@ -1,0 +1,34 @@
+{% extends 'base.html'%}
+{% block body %}
+
+<div class="panel" id="home">
+		تأكيد النقل
+		<form method="post" id="form" action="{% url 'confirm_send_analysis'%}">
+			{% csrf_token %}
+			<table align="right">
+				<input type="submit" value="تأكيد">
+				المعمل
+				<select name="lab">
+					<option value="{{lab.id}}">{{lab.name}}</option>  
+
+				</select>
+				{% for test in tests %}
+				<tr>
+					<br/>
+					{{test.analysis.patient.name}} اسم المريض
+					<br/>
+					التحليل
+					<input type="checkbox" onclick="return false" name="tests" value="{{test.id}}" checked>{{test.test.name}} 
+					
+				</tr>
+				{% endfor %}
+				
+				
+			</table>
+		</form>
+	
+	
+</div>
+
+{% endblock %}
+

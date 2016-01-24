@@ -1,0 +1,29 @@
+{% extends 'base.html'%}
+{% block body %}
+
+<div class="panel" id="home">
+			<table align="right">
+				إجمالى 
+				{{total}}
+				{% for test in tests %}
+				<tr>
+					<br/>
+					{{test.analysis.patient.name}} اسم المريض
+					<br/>
+				
+					{{test.test.name}}التحليل 
+					<br/>
+					التكلفة
+					{{test.sending_cost}}
+				</tr>
+				{% endfor %}
+				
+				
+			</table>
+		</form>
+	
+	
+</div>
+
+{% endblock %}
+

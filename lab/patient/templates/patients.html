@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block js%}
+	<script>
+		$(document).ready(function(){
+			
+			$("#patient").addClass('selected');
+    		
+		});
+	</script>
+{% endblock %}
+
+{% block body %}
+
+<div class="panel" id="home">
+	
+	<fieldset align="center">
+	<legend align="right">
+		<h1>
+			بــحث عن مريض
+		</h1>
+	</legend>
+	<form method="post" action="{% url 'list_patients'%}" align="right">
+		{% csrf_token %}
+		<input type="submit" value="بــحث">
+		<input type="text" name="param" />
+	</form>
+	</fieldset>
+
+	<fieldset align="center">
+	<legend align="right">
+		<h1>
+			<a href="{% url 'add_patient'%}"><img src="{% static 'images/add.png'%}" title="إضافة مريض جديد"></a>
+			<a href="{% url 'list_patients' 'alphabet' %}"><img src="{% static 'images/sort_ascend.png'%}" title="حسب الترتيب الأبجدى"></a>
+     		<a href="{% url 'list_patients' 'oldest' %}"><img src="{% static 'images/sort.png'%}" title="الأحدث للأقدم"></a>
+			<a href="{% url 'list_patients' 'newest' %}"><img src="{% static 'images/sort_reverse.png'%}" title="الأقدم للأحدث"></a>
+
+			المرضى
+		</h1>
+		
+	 </legend>
+	<br/>
+	
+	{% if not patients %}
+		<div align="center">عفوا .... لا توجد نتائج</div>
+	{% else %}
+	<table border="1" align="center" width="500">
+		<tr>
+		<th>أخرى</th>
+		<th>الرقم القومى</th>
+		<th>رقم الهاتف المحمول</th>
+		<th>رقم التليفون</th>
+		<th>العنوان</th>
+		<th>اسم المريض</th><br />
+		<th>الرقم التعريفى</th>
+		
+		
+		</tr>
+		{% for record in patients %}
+		<tr>
+			<td>
+				{% if user.is_superuser %}
+				<a href="{% url 'delete_patient' record.id %}" > 
+				<img src="{% static 'images/delete.png' %}" title="حذف المريض" />
+				</a>
+				{% endif %}
+				<a href="{% url 'patient_reports' record.id %}" > 
+				<img src="{% static 'images/more_tests.png' %}" title="إضافة فحوصات"/>
+				</a>
+				
+				<a href="{% url 'list_analysis' record.id 'all' %}" > 
+				<img src="{% static 'images/more_tests.png' %}" title="عرض الفحوصات"/>
+				</a>
+				
+				<a href="{% url 'patient_reports' record.id %}" > 
+				<img src="{% static 'images/more_info.png' %}" title="الــمزيد من المعلومات" />
+				</a>
+				
+				<a href="{% url 'patient_reports' record.id %}" > 
+				<img src="{% static 'images/report.png' %}" title="عرض تقـــارير المريض" />
+				</a>
+				
+				<a href="{% url 'add_analysis' record.id %}">إضافة فحص</a>
+			</td>
+			<td>{{record.national_ID}}</td>
+			<td>{{record.cell}}</td>
+			<td>{{record.telephone}}</td>
+			<td>{{record.address}}</td>
+			<td><a href="{% url 'edit_patient' id=record.id %}">{{record.name}}</a></td>
+			<td>{{record.id}}</td>
+		</tr>
+			{% endfor %}
+	</table>
+{%endif%}
+</fieldset>				
+
+</div>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends 'base.html'%}
+{% block body %}
+
+<div class="panel" id="home">
+	<fieldset align="center">
+		<legend align="right">
+			<h1>الإيراد والمصاريف </h1>
+			الإيراد 
+			{{income}}
+			<br/>
+			المصاريف 
+			
+			{{expenses}}
+
+		</legend>
+		</fieldset>
+	<fieldset align="center">
+		<legend align="right">
+			<h1>حساب الإيراد والمصاريف </h1>
+		</legend>
+		<form method="post" id="form">
+			{% csrf_token %}
+			<table align="right">
+				{{form.errors}}
+				<tr>
+					<td align="left">{{form.type}}</td>
+					<td align="right"><label for="id_name">:اختر المدة الزمنية</label></td>
+
+				</tr>
+				<tr id="lab">
+					<td align="right">{{form.start}}</td>
+					<td align="right"><label for="id_name">:من</label></td>
+				</tr>
+				<tr id="physician_row">
+					<td align="right">{{form.end}}</td>
+					<td align="right"><label for="id_name">:إلى</label></td>
+				</tr>
+				
+				<tr>
+					<br/>
+					<td align="right">
+					<input type="submit" id="submit" value="حساب">
+					</td>
+				</tr>
+				
+			</table>
+		</form>
+	</fieldset>
+</div>
+
+{% endblock %}

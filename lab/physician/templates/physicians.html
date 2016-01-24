@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block js%}
+	<script>
+		$(document).ready(function(){
+			
+			$("#physician").addClass('selected');
+    		
+		});
+	</script>
+{% endblock %}
+
+{% block body %}
+
+<div class="panel" id="home">
+	
+	<fieldset align="center">
+	<legend align="right">
+		<h1>
+			بــحث عن طبيب
+		</h1>
+	</legend>
+	<form method="post" action="{% url 'list_physician'%}" align="right">
+		{% csrf_token %}
+		<input type="submit" value="بــحث">
+		<input type="text" name="param" id="soso"/>
+	</form>
+	</fieldset>
+
+	<fieldset align="center">
+	<legend align="right">
+		<h1>
+			<a href="{% url 'list_physician' 'normal' %}"><img src="{% static 'images/non_vip_doctor.png'%}" title="أطباء غير متعاقد معهم"></a>
+			<a href="{% url 'list_physician' 'vip' %}"><img src="{% static 'images/vip_doctor.png'%}" title="أطباء متعاقد معهم"></a>
+			<a href="{% url 'list_physician' %}"><img src="{% static 'images/all_doctors.png'%}" title="كل الأطباء"></a>
+			<a href="{% url 'add_physician'%}"><img src="{% static 'images/add.png'%}" title="إضافة طبيب جديد"></a>
+				
+			الأطباء
+		</h1>
+		
+	 </legend>
+	<br/>
+	
+	{% if not physicians %}
+		<div align="center">عفوا .... لا توجد نتائج</div>
+	{% else %}
+	<table border="1" align="center" width="500">
+		<tr>
+		<th>أخرى</th>
+		<th>متعاقد معه</th>
+		<th>رقم الهاتف المحمول</th>
+		<th>رقم التليفون</th>
+		<th>العنوان</th>
+		<th>اسم الطبيب</th>
+		
+		</tr>
+		{% for record in physicians %}
+		<tr>
+			<td>
+				<a href="{% url 'delete_physician' record.id %}" > 
+				<img src="{% static 'images/delete.png' %}" title="حذف الطبيب" />
+				</a>
+				
+				<a href="{% url 'physician_reports' record.id %}" > 
+				<img src="{% static 'images/report.png' %}" title="عرض تقـــارير الطبيب" />
+				</a>
+			</td>
+			<td>
+			{% if record.is_vip %}
+				<input type="checkbox" disabled="disabled" checked="checked"/>
+			{% else %}
+				<input type="checkbox" disabled="disabled" />
+			{% endif %}
+			</td>
+			<td>{{record.cell}}</td>
+			<td>{{record.telephone}}</td>
+			<td>{{record.address}}</td>
+			<td><a href="{% url 'edit_physician' id=record.id %}">{{record.name}}</a></td>
+		</tr>
+			{% endfor %}
+	</table>
+{%endif%}
+</fieldset>				
+
+</div>
+{% endblock %}

@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block js%}
+<script>
+	$(document).ready(function() {
+
+		$("#patient").addClass('selected');
+
+	}); 
+</script>
+{% endblock %}
+
+{% block body %}
+
+<div class="panel" id="home">
+	<fieldset align="center">
+		<legend align="right">
+			<h1> تأكيد حذف مريض </h1>
+
+		</legend>
+		<br/>
+		<table border="0" align="center" width="500">
+
+			<tr>
+				<td>{{patient.name}} </td>
+				<td> اسم المريض</td>
+			</tr>
+
+			<tr>
+				<td>{{patient.address}} </td>
+				<td> العنوان</td>
+			</tr>
+
+			<tr>
+				<td>{{patient.telephone}} </td>
+				<td> التليفون</td>
+				
+			</tr>
+			<td>{{patient.cell}} </td>
+				<td> الهاتف المحمول</td>
+			<tr>
+				<td>{{patient.national_ID}} </td>
+				<td> الرقم القومى</td>
+			</tr>
+
+			<tr>
+				<td>   {% if patient.sex == "male"%} ذكر {% else %} أنثى{%endif%}</td>
+				<td> النوع</td>
+			</tr>
+
+			<tr>
+				<td>العمر : {{patient.age_number}} {% if patient.age_type == "year"%}سنة {% elif patient.age_type == "day"%} يوم{% elif patient.age_type == "month"%}شهر {%endif%}  </td>
+
+			</tr>
+
+			<tr>
+				<td>البريد الاليكترونى : {{patient.email}}</td>
+
+			</tr>
+
+			
+					<tr>
+						<td> يتلقى علاجا لسيولة الدم :  {% if patient.blood_liquidity_treatment%}<input type="checkbox" disabled checked>{%else%}<input type="checkbox" disabled> {%endif%} </td>
+					</tr>
+
+					<tr>
+						<td> يأخذ مضادات حيوية :  {% if patient.antibiotique_treatment%}<input type="checkbox" disabled checked>{%else%}<input type="checkbox" disabled> {%endif%} </td>
+
+					</tr>
+
+					<tr>
+						<td> مريض بالسكر :  {% if patient.diabetic_treatment%}<input type="checkbox" disabled checked>{%else%}<input type="checkbox" disabled> {%endif%} </td>
+				
+					</tr>
+
+					<tr>
+						<td> يتلقى علاجا للفيروسات :  {% if patient.virus_treatment%}<input type="checkbox" disabled checked>{%else%}<input type="checkbox" disabled> {%endif%} </td>
+
+					</tr>
+
+					<tr>
+						<td> سبق نقل دم له :  {% if patient.had_blood_transfer%}<input type="checkbox" disabled checked>{%else%}<input type="checkbox" disabled> {%endif%} </td>
+					</tr>
+
+					<tr>
+						<td> يأخذ علاجا للغدد :  {% if patient.gland_treatment%}<input type="checkbox" disabled checked>{%else%}<input type="checkbox" disabled> {%endif%} </td>
+					</tr>
+
+					<tr>
+						<td> هل يوجد حمل؟ :  {% if patient.pregnant%}<input type="checkbox" disabled checked>{%else%}<input type="checkbox" disabled> {%endif%} </td>
+
+					</tr>
+
+					<tr>
+						<td> مدخن :  {% if patient.smoker%}<input type="checkbox" disabled checked>{%else%}<input type="checkbox" disabled> {%endif%} </td>
+
+					</tr>
+
+					<tr>
+						<td> تلقى علاجا للكبد :  {% if patient.liver_treatment%}<input type="checkbox" disabled checked>{%else%}<input type="checkbox" disabled> {%endif%} </td>
+					</tr>
+
+			
+					<tr>
+						ملاحظات أخرى
+						<td> {{patient.notes}}</td>
+
+					</tr>
+
+					<tr>
+						<td>
+						<form action="{% url 'confirm_delete_patient' patient.id %}" method="post">
+							{% csrf_token %}
+							<input  type="submit" value="تأكيد الحــــــــذف"/>
+
+						</form></td>
+					</tr>
+				</table>
+
+			</fieldset>
+
+</div>
+{% endblock %}
