@@ -13,4 +13,7 @@ The project was aiming at doing smart analysis on data collected from those smal
 - pip install -r requiements.pip
 - python manage.py syncdb
 - python manage.py runserver
+- 
+# Help me
+- This project is not yet completed, if you can help contact me.
 
